@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
 </head>
-
 <body>
-
 <header>
-    <p><h1>🌱 Smart Crop Supply Management System</h1><br>Enterprise Application Development(EAD) Project</p>
+    <p><h1>🌱 Smart Crop Supply Management System<h6>Enterprise Application Development(EAD) Project<h6></h1><br></p>
     <p> </p>
 </header>
 
