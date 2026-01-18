@@ -8,7 +8,7 @@ public class AdminDash extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        JLabel lbl = new JLabel("Welcome Admin: " + username);
+        JLabel lbl = new JLabel("Welcome Admin");
         lbl.setHorizontalAlignment(JLabel.CENTER);
 
         add(lbl);

@@ -11,7 +11,7 @@ public class RegisterForm extends JFrame {
     // Components made public for access in Main2
     public JTextField txtFullname, txtUser, txtContact, txtEmail;
     public JPasswordField txtPass;
-    public JComboBox<String> cbStatus;
+    public JComboBox<String> cbRole;
     public JButton btnSubmit, btnBack;
 
     public RegisterForm() {
@@ -51,10 +51,12 @@ public class RegisterForm extends JFrame {
         txtPass.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Create Password");
         txtPass.putClientProperty(FlatClientProperties.STYLE, "arc: 20; margin: 5,10,5,10");
 
-        // Status Dropdown
-        String[] statuses = {"Select Status", "Admin", "Officer", "Buyer"};
-        cbStatus = new JComboBox<>(statuses);
-        cbStatus.putClientProperty(FlatClientProperties.STYLE, "arc: 20; padding: 5,10,5,10");
+        // Role Dropdown
+        String[] Roles = {"Select your Role","Officer", "Buyer"};
+        cbRole = new JComboBox<>(Roles);
+        cbRole.putClientProperty(FlatClientProperties.STYLE, "arc: 20;hoverBackground: #3a3a3a;borderWidth: 1; padding: 5,10,5,10");
+        cbRole.setPreferredSize(new Dimension(cbRole.getPreferredSize().width, 40));
+
 
         // Submit Button (Green)
         btnSubmit = new JButton("Create Account");
@@ -81,7 +83,7 @@ public class RegisterForm extends JFrame {
         card.add(txtUser, "h 40!");
         card.add(txtPass, "h 40!");
         card.add(lblRole, "gaptop 15, gapbottom 5");
-        card.add(cbStatus, "h 40!");
+        card.add(cbRole, "h 40!");
         card.add(btnSubmit, "h 50!, gaptop 30");
         card.add(btnBack, "right, gaptop 10");
 
@@ -115,7 +117,7 @@ public class RegisterForm extends JFrame {
             String contact = txtContact.getText();
             String email = txtEmail.getText();
             String password = new String(txtPass.getPassword());
-            String role = cbStatus.getSelectedItem().toString();
+            String role = cbRole.getSelectedItem().toString();
             String query;
 
             // Validation
@@ -147,7 +149,7 @@ public class RegisterForm extends JFrame {
                     txtPass.setText("");
                     txtContact.setText("");
                     txtEmail.setText("");
-                    cbStatus.setSelectedIndex(0);
+                    cbRole.setSelectedIndex(0);
                 } else {
                     JOptionPane.showMessageDialog(this, "Register unsuccessful!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -156,6 +158,10 @@ public class RegisterForm extends JFrame {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
+        if (cbRole.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Please select a valid Role.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return; // Stop the code here so it doesn't try to save to DB
+        }
         }
 
 

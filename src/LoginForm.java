@@ -108,7 +108,7 @@ public class LoginForm extends JFrame
                 JOptionPane.showMessageDialog(this, "Login Successful");
 
                 if (role.equalsIgnoreCase("ADMIN")) {
-                    new AdminDash(fullName).setVisible(true);
+                    new AdminDash(null).setVisible(true);
                 } else if (role.equalsIgnoreCase("FARMER")) {
                     new BuyerDash(username).setVisible(true);
                 } else if (role.equalsIgnoreCase("BUYER")) {
