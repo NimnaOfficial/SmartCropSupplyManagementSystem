@@ -15,12 +15,15 @@ public class CropsMgr extends JPanel {
     private JComboBox<String> comboCategory, comboSeason, comboFarmer;
     private JButton btnAdd, btnUpdate, btnDelete, btnClear;
     private final int[] selectedCropId = {-1};
+    private final JLabel lblTotalCrops;
 
-    public CropsMgr() {
+    public CropsMgr(JLabel lblTotalCrops) {
+        this.lblTotalCrops = lblTotalCrops;
         setLayout(new BorderLayout());
         setOpaque(false);
         initUI();
         loadCropData();
+
     }
 
     private void initUI() {
@@ -61,23 +64,18 @@ public class CropsMgr extends JPanel {
         formPanel.add(btnClear, "h 38!");
 
         // --- RIGHT COLUMN: TABLE ---
-        JPanel tableArea = new JPanel(new MigLayout("fill, insets 0", "[grow]", "[]15[grow]"));
+        JPanel tableArea = new JPanel(new MigLayout("fillx, insets 0", "[grow,fill]", "[]15[grow]"));
         tableArea.setOpaque(false);
 
         txtSearch = new JTextField();
-        txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search by Name or NIC...");
+        txtSearch.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search crops or farmers...");
         txtSearch.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
-        txtSearch.putClientProperty(
-                FlatClientProperties.STYLE,
-                "arc: 20; background: #2a2a2a; margin: 5,10,5,10; outlineColor: #2ecc71"
-        );
+        txtSearch.putClientProperty(FlatClientProperties.STYLE, "arc: 20; background: #2a2a2a; margin: 5,10,5,10; outlineColor: #2ecc71");
 
-        JButton btnRefresh = new JButton("Refresh");
-        btnRefresh.putClientProperty(
-                FlatClientProperties.STYLE,
-                "background: #1e1e1e; foreground: #2ecc71; arc: 15; borderWidth: 1; borderColor: #2ecc71"
-        );
-
+        JPanel topRow = new JPanel(new MigLayout("fillx, insets 0", "[grow,fill]15[100!]"));
+        topRow.setOpaque(false);
+        topRow.add(txtSearch, "growx, pushx");
+        tableArea.add(topRow, "growx, wrap");
 
         model = new DefaultTableModel(new String[]{"ID", "Crop Name", "Category", "Season", "Farmer"}, 0);
         table = new JTable(model);
@@ -87,11 +85,14 @@ public class CropsMgr extends JPanel {
         JScrollPane tableScroll = new JScrollPane(table);
         tableScroll.getViewport().setBackground(new Color(30, 30, 30));
 
-        tableArea.add(txtSearch, "growx, h 38!, wrap");
+
         tableArea.add(tableScroll, "grow");
 
         // --- EVENT LISTENERS ---
         btnAdd.addActionListener(e -> saveCrop());
+        btnUpdate.addActionListener(e -> updateCrops());
+        btnDelete.addActionListener(e -> deleteCrops());
+        btnClear.addActionListener(e -> clearFields());
 
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
@@ -129,12 +130,73 @@ public class CropsMgr extends JPanel {
         } catch (Exception ex) { ex.printStackTrace(); }
     }
 
+    private void updateCrops() {
+        if (selectedCropId[0] == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a crop from the table to update.");
+            return;
+        }
+
+        try (Connection conn = DBconnection.getConnection()) {
+            // 1. Ensure 'cropId' matches your actual DB column name (cId or cropId)
+            String sql = "UPDATE crops_tbl SET cropName=?, category=?, season=?, farmerName=? WHERE cropId=?";
+            PreparedStatement p = conn.prepareStatement(sql);
+
+            p.setString(1, txtCropName.getText());
+            p.setString(2, comboCategory.getSelectedItem().toString());
+            p.setString(3, comboSeason.getSelectedItem().toString());
+            p.setString(4, comboFarmer.getSelectedItem().toString());
+
+            // 2. THIS WAS MISSING: You must pass the ID for the WHERE clause
+            p.setInt(5, selectedCropId[0]);
+
+            int result = p.executeUpdate();
+            if (result > 0) {
+                JOptionPane.showMessageDialog(this, "Crop Updated Successfully!");
+                loadCropData();
+                clearFields();
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Update Error: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private void deleteCrops() {
+        if (selectedCropId[0] == -1) return;
+
+        try (Connection conn = DBconnection.getConnection()) {
+            PreparedStatement p = conn.prepareStatement("DELETE FROM crops_tbl WHERE cropId=?");
+            p.setInt(1, selectedCropId[0]);
+            p.executeUpdate();
+            loadCropData();
+            clearFields();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void loadCropData() {
         model.setRowCount(0);
-        try (Connection c = DBconnection.getConnection(); Statement s = c.createStatement();
+        int count = 0;
+
+        try (Connection c = DBconnection.getConnection();
+             Statement s = c.createStatement();
              ResultSet r = s.executeQuery("SELECT * FROM crops_tbl")) {
-            while (r.next()) model.addRow(new Object[]{r.getInt(1), r.getString(2), r.getString(3), r.getString(4), r.getString(5)});
-        } catch (Exception ex) { ex.printStackTrace(); }
+
+            while (r.next()) {
+                model.addRow(new Object[]{
+                        r.getInt(1),
+                        r.getString(2),
+                        r.getString(3),
+                        r.getString(4),
+                        r.getString(5)
+                });
+            count++;
+            }
+            lblTotalCrops.setText(String.valueOf(count));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void searchCropData(String q) {
@@ -143,16 +205,30 @@ public class CropsMgr extends JPanel {
             PreparedStatement p = c.prepareStatement("SELECT * FROM crops_tbl WHERE cropName LIKE ? OR farmerName LIKE ?");
             p.setString(1, "%"+q+"%"); p.setString(2, "%"+q+"%");
             ResultSet r = p.executeQuery();
-            while (r.next()) model.addRow(new Object[]{r.getInt(1), r.getString(2), r.getString(3), r.getString(4), r.getString(5)});
-        } catch (Exception ex) { ex.printStackTrace(); }
+
+            while (r.next()) model.addRow(new Object[]{
+                    r.getInt(1),
+                    r.getString(2),
+                    r.getString(3),
+                    r.getString(4),
+                    r.getString(5)});
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void loadFarmerDropdown() {
-        try (Connection conn = DBconnection.getConnection(); Statement st = conn.createStatement();
+        try (Connection conn = DBconnection.getConnection();
+             Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery("SELECT fullName FROM farmer_tbl")) {
             comboFarmer.removeAllItems();
-            while (rs.next()) comboFarmer.addItem(rs.getString("fullName"));
-        } catch (Exception e) { e.printStackTrace(); }
+
+            while (rs.next())
+                comboFarmer.addItem(rs.getString("fullName"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void clearFields() {
@@ -166,5 +242,33 @@ public class CropsMgr extends JPanel {
         JLabel l = new JLabel(t);
         l.putClientProperty(FlatClientProperties.STYLE, "foreground: #AAAAAA; font: -1");
         return l;
+    }
+
+    private void loadCropsData2() {
+        model.setRowCount(0);
+        int count = 0;
+
+        try (Connection c = DBconnection.getConnection();
+             Statement s = c.createStatement();
+             ResultSet r = s.executeQuery("SELECT * FROM crops_tbl")) {
+
+            while (r.next()) {
+                model.addRow(new Object[]{
+                        r.getInt(1),
+                        r.getString(2),
+                        r.getString(3),
+                        r.getString(4),
+                        r.getString(5),
+                        r.getString(6)
+                });
+                count++;
+            }
+            lblTotalCrops.setText(String.valueOf(count));
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
     }
 }

@@ -61,8 +61,7 @@ public class FarmerMgr extends JPanel {
         formPanel.add(btnClear, "h 38!");
 
         // ---------- TABLE AREA ----------
-        JPanel tableArea = new JPanel(new MigLayout("fillx, insets 0", "[grow,fill]", "[]15[grow]")
-        );
+        JPanel tableArea = new JPanel(new MigLayout("fillx, insets 0", "[grow,fill]", "[]15[grow]"));
         tableArea.setOpaque(false);
 
         txtSearch = new JTextField();
@@ -70,24 +69,20 @@ public class FarmerMgr extends JPanel {
         txtSearch.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
         txtSearch.putClientProperty(FlatClientProperties.STYLE, "arc: 20; background: #2a2a2a; margin: 5,10,5,10; outlineColor: #2ecc71");
 
-        JButton btnRefresh = new JButton("Refresh");
-        btnRefresh.putClientProperty(FlatClientProperties.STYLE, "background: #1e1e1e; foreground: #2ecc71; arc: 15; borderWidth: 1; borderColor: #2ecc71");
-
         JPanel topRow = new JPanel(new MigLayout("fillx, insets 0", "[grow,fill]15[100!]"));
         topRow.setOpaque(false);
         topRow.add(txtSearch, "growx, pushx");
-        topRow.add(btnRefresh, "h 38!");
-
         tableArea.add(topRow, "growx, wrap");
 
         model = new DefaultTableModel(new String[]{"ID", "Name", "NIC", "Phone", "Address", "District"}, 0);
         table = new JTable(model);
         table.setRowHeight(40);
+        table.getTableHeader().putClientProperty(FlatClientProperties.STYLE, "background: #2a2a2a; foreground: #AAAAAA; font: bold");
 
         tableArea.add(new JScrollPane(table), "grow");
 
         // ---------- EVENTS ----------
-        btnRefresh.addActionListener(e -> loadFarmerData());
+
 
         txtSearch.addKeyListener(new KeyAdapter() {
             @Override
@@ -99,7 +94,7 @@ public class FarmerMgr extends JPanel {
         btnAdd.addActionListener(e -> addFarmer());
         btnUpdate.addActionListener(e -> updateFarmer());
         btnDelete.addActionListener(e -> deleteFarmer());
-        btnClear.addActionListener(e -> clearForm());
+        btnClear.addActionListener(e -> clearField());
 
         table.getSelectionModel().addListSelectionListener(e -> selectRow());
 
@@ -110,8 +105,8 @@ public class FarmerMgr extends JPanel {
     // ================= CRUD =================
 
     private void addFarmer() {
-        try (Connection c = DBconnection.getConnection()) {
-            PreparedStatement p = c.prepareStatement("INSERT INTO farmer_tbl (fullName, nic, phone, address, district) VALUES (?,?,?,?,?)");
+        try (Connection conn = DBconnection.getConnection()) {
+            PreparedStatement p = conn.prepareStatement("INSERT INTO farmer_tbl (fullName, nic, phone, address, district) VALUES (?,?,?,?,?)");
             p.setString(1, txtName.getText());
             p.setString(2, txtNIC.getText());
             p.setString(3, txtPhone.getText());
@@ -119,7 +114,7 @@ public class FarmerMgr extends JPanel {
             p.setString(5, comboDist.getSelectedItem().toString());
             p.executeUpdate();
             loadFarmerData();
-            clearForm();
+            clearField();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -128,8 +123,8 @@ public class FarmerMgr extends JPanel {
     private void updateFarmer() {
         if (selectedFarmerId[0] == -1) return;
 
-        try (Connection c = DBconnection.getConnection()) {
-            PreparedStatement p = c.prepareStatement("UPDATE farmer_tbl SET fullName=?, nic=?, phone=?, address=?, district=? WHERE fId=?");
+        try (Connection conn = DBconnection.getConnection()) {
+            PreparedStatement p = conn.prepareStatement("UPDATE farmer_tbl SET fullName=?, nic=?, phone=?, address=?, district=? WHERE fId=?");
             p.setString(1, txtName.getText());
             p.setString(2, txtNIC.getText());
             p.setString(3, txtPhone.getText());
@@ -138,7 +133,7 @@ public class FarmerMgr extends JPanel {
             p.setInt(6, selectedFarmerId[0]);
             p.executeUpdate();
             loadFarmerData();
-            clearForm();
+            clearField();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -151,7 +146,7 @@ public class FarmerMgr extends JPanel {
             p.setInt(1, selectedFarmerId[0]);
             p.executeUpdate();
             loadFarmerData();
-            clearForm();
+            clearField();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -185,7 +180,6 @@ public class FarmerMgr extends JPanel {
 
     private void searchFarmerData(String q) {
         model.setRowCount(0);
-
         try (Connection c = DBconnection.getConnection()) {
             PreparedStatement p = c.prepareStatement("SELECT * FROM farmer_tbl WHERE fullName LIKE ? OR nic LIKE ?");
             p.setString(1, "%" + q + "%");
@@ -220,7 +214,7 @@ public class FarmerMgr extends JPanel {
         btnAdd.setEnabled(false);
     }
 
-    private void clearForm() {
+    private void clearField() {
         txtName.setText("");
         txtNIC.setText("");
         txtPhone.setText("");
@@ -233,24 +227,17 @@ public class FarmerMgr extends JPanel {
 
     // ================= UI HELPERS =================
 
-    private JLabel label(String t) {
-        JLabel l = new JLabel(t);
-        l.putClientProperty(FlatClientProperties.STYLE, "foreground: #AAAAAA");
+    private JLabel label(String t) {JLabel l = new JLabel(t);l.putClientProperty(FlatClientProperties.STYLE, "foreground: #AAAAAA");
         return l;
     }
 
-    private JLabel title(String t) {
-        JLabel l = new JLabel(t);
-        l.putClientProperty(FlatClientProperties.STYLE, "font: bold +4; foreground: #FFFFFF");
+    private JLabel title(String t) {JLabel l = new JLabel(t);l.putClientProperty(FlatClientProperties.STYLE, "font: bold +4; foreground: #FFFFFF");
         return l;
     }
 
     private JButton button(String t, String color) {
         JButton b = new JButton(t);
-        b.putClientProperty(
-                FlatClientProperties.STYLE,
-                "background: " + color + "; foreground: #FFFFFF; arc: 15"
-        );
+        b.putClientProperty(FlatClientProperties.STYLE, "background: " + color + "; foreground: #FFFFFF; arc: 15");
         return b;
     }
 }

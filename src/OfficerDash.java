@@ -13,7 +13,7 @@ public class OfficerDash extends JFrame {
     private String officerName, username2;
     private int usid;
     private JPanel tableContainer;
-    private JLabel pageTitle, lblTotalFarmers;
+    private JLabel pageTitle, lblTotalFarmers,lblTotalCrops,lblSuppliesDispatched;
     private JButton currentActiveBtn = null;
 
     public OfficerDash(String name, String usern, int id) {
@@ -92,8 +92,11 @@ public class OfficerDash extends JFrame {
 
         lblTotalFarmers = new JLabel("0");
         statsRow.add(createStatCard("Total Farmers", lblTotalFarmers, "#3498db"));
-        statsRow.add(createStatCard("Active Crops", new JLabel("45"), "#f1c40f"));
-        statsRow.add(createStatCard("Supplies Dispatched", new JLabel("892"), "#2ecc71"));
+        lblTotalCrops = new JLabel("0");
+        statsRow.add(createStatCard("Active Crops", lblTotalCrops, "#f1c40f"));
+        lblSuppliesDispatched = new JLabel("0");
+        statsRow.add(createStatCard("Supplies Dispatched", lblSuppliesDispatched, "#2ecc71"));
+
 
         tableContainer = new JPanel(new BorderLayout());
         tableContainer.putClientProperty(FlatClientProperties.STYLE, "arc: 30; background: #1e1e1e");
@@ -131,15 +134,26 @@ public class OfficerDash extends JFrame {
         btnCrops.addActionListener(e -> {
             setActiveButton(btnCrops);
             tableContainer.removeAll();
-
-            // Call the new class here
-            CropsMgr cropMgr = new CropsMgr();
-            tableContainer.add(cropMgr, BorderLayout.CENTER);
-
+            tableContainer.add(new CropsMgr(lblTotalCrops), BorderLayout.CENTER);
             tableContainer.revalidate();
             tableContainer.repaint();
-
         });
+
+        // Inside OfficerDash sidebar actions
+        btnSupply.addActionListener(e -> {
+            setActiveButton(btnSupply);
+            tableContainer.removeAll();
+
+            // Assuming your 3rd stat card label is named 'lblTotalSupplies'
+            // You should define this label in your initUI where you create statsRow
+            SupplyMgr supplyMgr = new SupplyMgr(lblSuppliesDispatched);
+
+            tableContainer.add(supplyMgr, BorderLayout.CENTER);
+            tableContainer.revalidate();
+            tableContainer.repaint();
+            pageTitle.setText("Supply Preparation System");
+        });
+
     }
 
     // ===== UI HELPERS (MUST STAY IN OfficerDash) =====
