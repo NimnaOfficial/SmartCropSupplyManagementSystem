@@ -40,7 +40,7 @@ public class BuyerDash extends JFrame {
             ImageIcon originalIcon = new ImageIcon("C:\\Users\\SANDANIMNE\\Desktop\\EAD fnl\\logo.png");
             Image scaledImg = originalIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
             sidebar.add(new JLabel(new ImageIcon(scaledImg)), "center, gapbottom 10");
-        } catch (Exception e) { /* Handle missing image */ }
+        } catch (Exception e) {}
 
         JLabel logoText = new JLabel("SMART CROP");
         logoText.putClientProperty(FlatClientProperties.STYLE, "font: bold +18; foreground: #2ecc71");

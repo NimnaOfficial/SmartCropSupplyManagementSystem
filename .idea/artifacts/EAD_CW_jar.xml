@@ -3,10 +3,10 @@
     <output-path>$PROJECT_DIR$/out/artifacts/EAD_CW_jar</output-path>
     <root id="archive" name="EAD_CW.jar">
       <element id="module-output" name="EAD_CW" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../plugins/miglayout-core-11.4.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../plugins/miglayout-swing-11.4.2.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../mysql-connector-j-9.5.0/mysql-connector-j-9.5.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/../plugins/flatlaf-3.5.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../mysql-connector-j-9.5.0/mysql-connector-j-9.5.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../plugins/miglayout-swing-11.4.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../plugins/miglayout-core-11.4.2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
