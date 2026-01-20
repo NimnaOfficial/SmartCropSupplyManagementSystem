@@ -1,6 +1,5 @@
 import com.formdev.flatlaf.FlatClientProperties;
 import db.DBconnection;
-
 import javax.swing.*;
 import java.sql.*;
 
@@ -19,11 +18,7 @@ public class AuthController {
             return;
         }
 
-        String sql = """
-            SELECT userId, username, fullname, role
-            FROM register_tbl
-            WHERE username=? AND password=?
-        """;
+        String sql = "SELECT userId, username, fullname, role FROM register_tbl WHERE username=? AND password=?";
 
         try (Connection con = DBconnection.getConnection();
              PreparedStatement pst = con.prepareStatement(sql)) {
