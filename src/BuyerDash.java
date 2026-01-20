@@ -125,11 +125,12 @@ public class BuyerDash extends JFrame {
         });
 
         btnLogout.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                this.dispose();
-                // Ensure you have a Login class. Replace 'Login' with your actual Login class name.
-                new OpenForm().setVisible(true);
+            if (JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION)
+                    == JOptionPane.YES_OPTION) {
+
+                dispose();
+                new LoginForm().setVisible(true);
             }
         });
 

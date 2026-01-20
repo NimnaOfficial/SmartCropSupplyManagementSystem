@@ -115,9 +115,12 @@ public class AdminDash extends JFrame {
         });
 
         btnLogout.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(this, "Logout from Admin Session?", "Logout", JOptionPane.YES_NO_OPTION) == 0) {
-                this.dispose();
-                new OpenForm().setVisible(true); // Goes back to your entry form
+            if (JOptionPane.showConfirmDialog(this,
+                    "Are you sure you want to logout?", "Confirm Logout", JOptionPane.YES_NO_OPTION)
+                    == JOptionPane.YES_OPTION) {
+
+                dispose();
+                new LoginForm().setVisible(true);
             }
         });
 

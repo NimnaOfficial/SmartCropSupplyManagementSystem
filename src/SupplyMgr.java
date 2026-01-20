@@ -9,6 +9,7 @@ import db.DBconnection;
 
 public class SupplyMgr extends JPanel {
 
+    private int[] supplyId = {-1};
     private JTable table;
     private DefaultTableModel model;
     private JTextField txtQuantity;
@@ -84,9 +85,11 @@ public class SupplyMgr extends JPanel {
         tableScroll.getViewport().setBackground(new Color(30, 30, 30));
         tableArea.add(tableScroll, "grow");
 
+        table.getSelectionModel().addListSelectionListener(e -> selectRow());
+
         // --- EVENT LISTENERS ---
         btnPrepare.addActionListener(e -> saveSupply());
-        btnCancel.addActionListener(e -> clearFields());
+        btnCancel.addActionListener(e -> deleteFarmer());
 
         managerPanel.add(new JScrollPane(formPanel), "growy");
         managerPanel.add(tableArea, "grow");
@@ -113,7 +116,9 @@ public class SupplyMgr extends JPanel {
             pst.executeUpdate();
             JOptionPane.showMessageDialog(this, "Supply Prepared Successfully!");
             loadSupplyData();
-            clearFields();
+            txtQuantity.setText("");
+            dateChooser.setDate(null);
+            table.clearSelection();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -151,10 +156,45 @@ public class SupplyMgr extends JPanel {
         }
     }
 
-    private void clearFields() {
-        txtQuantity.setText("");
-        dateChooser.setDate(null);
-        table.clearSelection();
+    private void selectRow() {
+        int r = table.getSelectedRow();
+        if (r == -1) return;
+
+        supplyId[0] = (int) model.getValueAt(r, 0);
+        comboCrops.setSelectedItem(model.getValueAt(r, 1));
+        txtQuantity.setText(model.getValueAt(r, 2).toString());
+        Object value = model.getValueAt(r, 3);
+
+        if (value instanceof java.util.Date) {
+            dateChooser.setDate((java.util.Date) value);
+        } else {
+            // If stored as String in table (yyyy-MM-dd)
+            try {
+                java.util.Date date = java.sql.Date.valueOf(value.toString());
+                dateChooser.setDate(date);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+
+
+        btnPrepare.setEnabled(false);
+    }
+
+    private void deleteFarmer() {
+        if (supplyId[0] == -1) return;
+
+        try (Connection c = DBconnection.getConnection()) {PreparedStatement p = c.prepareStatement("DELETE FROM supply_tbl WHERE supply_id=?");
+            p.setInt(1, supplyId[0]);
+            p.executeUpdate();
+            loadSupplyData();
+            txtQuantity.setText("");
+            dateChooser.setDate(null);
+            table.clearSelection();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private JLabel createFieldLabel(String t) {

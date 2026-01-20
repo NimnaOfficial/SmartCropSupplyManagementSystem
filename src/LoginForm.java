@@ -80,6 +80,8 @@ public class LoginForm extends JFrame
         }
 
     private void btnLoginActionPerformed() {
+        System.out.println("LOGIN BUTTON CLICKED");
+        AuthController.handleLogin(this);
 
     }
 

@@ -15,7 +15,7 @@ public class NavigationController {
         LoginForm login = new LoginForm();
         login.setLocation(pos);
 
-        login.btnLogin.addActionListener(e -> AuthController.handleLogin(login));
+        //login.btnLogin.addActionListener(e -> AuthController.handleLogin(login));
         login.btnRegister.addActionListener(e -> switchFrame(login, NavigationController::showRegister));
 
         login.setVisible(true);
