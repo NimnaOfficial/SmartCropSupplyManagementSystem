@@ -84,46 +84,7 @@ public class LoginForm extends JFrame
         }
 
     private void btnLoginActionPerformed() {
-        /*String username = txtUser.getText().trim();
-        String password = new String(txtPass.getPassword()).trim();
-        String fullName = "";
 
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Enter username and password");
-            return;
-        }
-
-        try (Connection con = DBconnection.getConnection()) {
-
-            String quary = "SELECT role FROM register_tbl WHERE username='"+username+"' AND password='"+password+"'";
-            Statement st = (Statement) con.createStatement();
-            txtUser.setText("");
-            txtPass.setText("");
-
-            ResultSet rs = st.executeQuery(quary);
-
-            if (rs.next()) {
-                String role = rs.getString("role");
-
-                JOptionPane.showMessageDialog(this, "Login Successful");
-
-                if (role.equalsIgnoreCase("ADMIN")) {
-                    new AdminDash(null).setVisible(true);
-                } else if (role.equalsIgnoreCase("Officer")) {
-                    new OfficerDash(username).setVisible(true);
-                } else if (role.equalsIgnoreCase("BUYER")) {
-                    new BuyerDash(username).setVisible(true);
-                }
-
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid credentials");
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error");
-        }*/
     }
 
 }

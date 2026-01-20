@@ -2,7 +2,6 @@ import com.formdev.flatlaf.FlatClientProperties;
 import net.miginfocom.swing.MigLayout;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -182,7 +181,7 @@ public class ReportMgr extends JPanel {
                 throw new RuntimeException("Report file not found: " + reportPath);
             }
 
-            JasperReport report = (JasperReport) JRLoader.loadObject(is);
+            JasperReport jr = (JasperReport) JRLoader.loadObject(is);
 
             // -------- PARAMETERS --------
             Map<String, Object> params = new HashMap<>();
@@ -195,19 +194,17 @@ public class ReportMgr extends JPanel {
                 params.put("logo", logo);
             }
 
-            JasperPrint print = JasperFillManager.fillReport(report, params, conn);
+            JasperPrint jp = JasperFillManager.fillReport(jr, params, conn);
+// 1. Define output folder and filename
+            String outputDir = "C:\\Users\\SANDANIMNE\\Desktop\\EAD fnl\\reports\\"; // your folder
+            new java.io.File(outputDir).mkdirs(); // create folder if it doesn't exist
+            String outputFile = outputDir + "\\Invoice_" + selection + ".pdf";
 
-            // -------- VIEW --------
-            JasperViewer.viewReport(print, false);
-
-            // -------- PDF EXPORT (PROOF) --------
-            String pdfPath = "C:\\Users\\SANDANIMNE\\Desktop\\EAD fnl\\reports\\" + selection + "_Report.pdf";
-            JasperExportManager.exportReportToPdfFile(print, pdfPath);
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Report generated successfully!\nSaved to:\n" + pdfPath
-            );
+// 2. Export PDF
+            JasperExportManager.exportReportToPdfFile(jp, outputFile);
+            JOptionPane.showMessageDialog(this, "Invoice saved to database and generated!");
+// 3. Optionally open the PDF automatically
+            Desktop.getDesktop().open(new java.io.File(outputFile));
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Report Error:\n" + ex.getMessage());

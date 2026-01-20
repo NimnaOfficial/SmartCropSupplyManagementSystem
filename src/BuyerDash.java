@@ -6,11 +6,11 @@ import java.awt.event.*;
 
 public class BuyerDash extends JFrame {
 
-    public JButton btnAvailCrops, btnReqSupply, btnOrders, btnInvoices, btnProfile, btnLogout, btnExit;
+    public JButton btnAvailCrops, btnReqSupply, btnInvoices, btnProfile, btnLogout, btnExit;
     private String buyerName, username2;
     private int usid;
     private JPanel tableContainer;
-    private JLabel pageTitle, lblAvailableCrops, lblRequestSupply, lblMyOrders;
+    private JLabel pageTitle, lblAvailableCrops, lblRequestSupply;
     private JButton currentActiveBtn = null;
 
     public BuyerDash(String name, String usern, int id) {
@@ -32,21 +32,20 @@ public class BuyerDash extends JFrame {
         JPanel sidebar = new JPanel(new MigLayout("wrap, fillx, insets 30", "[fill]", "[]10[]30[]10[]10[]10[]push[]10[]"));
         sidebar.setBackground(new Color(32, 32, 32));
 
-        // Logo
+        // Logo Image
         try {
             ImageIcon originalIcon = new ImageIcon("C:\\Users\\SANDANIMNE\\Desktop\\EAD fnl\\logo.png");
             Image scaledImg = originalIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
             sidebar.add(new JLabel(new ImageIcon(scaledImg)), "center, gapbottom 10");
-        } catch (Exception e) { /* Handle missing image */ }
+        } catch (Exception e) { /* Icon path handling */ }
 
         JLabel logoText = new JLabel("SMART CROP");
         logoText.putClientProperty(FlatClientProperties.STYLE, "font: bold +18; foreground: #2ecc71");
         sidebar.add(logoText, "center, gapbottom 40");
 
-        // Buyer Specific Buttons
+        // Initialize Buttons
         btnAvailCrops = createMenuButton("🛒  Available Crops");
         btnReqSupply  = createMenuButton("📦  Request Supply");
-        btnOrders     = createMenuButton("📑  My Orders");
         btnInvoices   = createMenuButton("💳  Invoices");
         btnProfile    = createMenuButton("👤  My Profile");
         btnLogout     = createMenuButton("🚪  Logout");
@@ -57,7 +56,6 @@ public class BuyerDash extends JFrame {
 
         sidebar.add(btnAvailCrops);
         sidebar.add(btnReqSupply);
-        sidebar.add(btnOrders);
         sidebar.add(btnInvoices);
         sidebar.add(btnProfile);
         sidebar.add(btnLogout);
@@ -74,7 +72,7 @@ public class BuyerDash extends JFrame {
         pageTitle = new JLabel("Buyer Overview");
         pageTitle.putClientProperty(FlatClientProperties.STYLE, "font: bold +6; foreground: #FFFFFF");
 
-        JLabel userProfile = new JLabel("<html>👤 Buyer: " + username2 + "<br><br><code><b>ID: " + usid + "</b></code></html>");
+        JLabel userProfile = new JLabel("<html>👤 Buyer: " + username2 + "<br><code><b>ID: " + usid + "</b></code></html>");
         userProfile.setForeground(new Color(180, 180, 180));
         topHeader.add(pageTitle);
         topHeader.add(userProfile);
@@ -85,16 +83,14 @@ public class BuyerDash extends JFrame {
         JLabel welcome = new JLabel("Welcome back, " + buyerName + "!");
         welcome.putClientProperty(FlatClientProperties.STYLE, "font: bold +14; foreground: #FFFFFF");
 
-        // Stats Row - Updated Labels
-        JPanel statsRow = new JPanel(new MigLayout("fillx, insets 0", "[fill]20[fill]20[fill]"));
+        // Stats Row
+        JPanel statsRow = new JPanel(new MigLayout("fillx, insets 0", "[fill]20[fill]"));
         statsRow.setOpaque(false);
 
         lblAvailableCrops = new JLabel("0");
         statsRow.add(createStatCard("Available Crops", lblAvailableCrops, "#3498db"));
         lblRequestSupply = new JLabel("0");
-        statsRow.add(createStatCard("Requested Supplies", lblRequestSupply, "#f1c40f"));
-        lblMyOrders = new JLabel("0");
-        statsRow.add(createStatCard("My Total Orders", lblMyOrders, "#2ecc71"));
+        statsRow.add(createStatCard("Active Requests", lblRequestSupply, "#f1c40f"));
 
         tableContainer = new JPanel(new BorderLayout());
         tableContainer.putClientProperty(FlatClientProperties.STYLE, "arc: 30; background: #1e1e1e");
@@ -104,20 +100,37 @@ public class BuyerDash extends JFrame {
         hint.setForeground(new Color(100, 100, 100));
         tableContainer.add(hint);
 
-        // Sidebar Actions
-       /* btnAvailCrops.addActionListener(e -> {
-            setActiveButton(btnAvailCrops);
-            tableContainer.removeAll();
-            // tableContainer.add(new AvailableCropsView(lblAvailableCrops), BorderLayout.CENTER);
-            pageTitle.setText("Marketplace - Available Crops");
-            refreshView();
-        });*/
+        // ==========================================
+        // SIDEBAR BUTTON ACTIONS
+        // ==========================================
 
-       /* btnReqSupply.addActionListener(e -> {
+        btnAvailCrops.addActionListener(e -> {
+            setActiveButton(btnAvailCrops);
+            showForm(new AvailableCrops(lblAvailableCrops), "Marketplace - Available Crops");
+        });
+
+        btnReqSupply.addActionListener(e -> {
             setActiveButton(btnReqSupply);
-            tableContainer.removeAll();
-            pageTitle.setText("Request New Supply Dispatch");
-            refreshView();
+            showForm(new RequestSupply(lblRequestSupply), "Submit New Supply Request");
+        });
+
+        btnInvoices.addActionListener(e -> {
+            setActiveButton(btnInvoices);
+            showForm(new InvoiceMgr(), "Financial Records & Invoices");
+        });
+
+        btnProfile.addActionListener(e -> {
+            setActiveButton(btnProfile);
+            showForm(new BuyerProfile(usid), "My Account Settings");
+        });
+
+       /* btnLogout.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                this.dispose();
+                // Ensure you have a Login class. Replace 'Login' with your actual Login class name.
+                new OpenForm().setVisible(true);
+            }
         });*/
 
         btnExit.addActionListener(e -> {
@@ -126,8 +139,7 @@ public class BuyerDash extends JFrame {
             }
         });
 
-        // Add logout logic here later if needed
-
+        // Assemble Dashboard
         body.add(welcome);
         body.add(statsRow, "h 130!");
         body.add(tableContainer, "grow");
@@ -136,24 +148,15 @@ public class BuyerDash extends JFrame {
         mainPanel.add(sidebar);
         mainPanel.add(contentArea);
         setContentPane(mainPanel);
-
-        btnAvailCrops.addActionListener(e -> {
-            setActiveButton(btnAvailCrops);
-            tableContainer.removeAll();
-
-            // Call AvailableCrops and pass the stat label to update count live
-            AvailableCrops availCrops = new AvailableCrops(lblAvailableCrops);
-
-            tableContainer.add(availCrops, BorderLayout.CENTER);
-            tableContainer.revalidate();
-            tableContainer.repaint();
-            pageTitle.setText("Marketplace - Available Crops");
-        });
     }
 
-    private void refreshView() {
+    // Helper method to clear container and show new form
+    private void showForm(JPanel form, String title) {
+        tableContainer.removeAll();
+        tableContainer.add(form, BorderLayout.CENTER);
         tableContainer.revalidate();
         tableContainer.repaint();
+        pageTitle.setText(title);
     }
 
     private JButton createMenuButton(String t) {
