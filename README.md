@@ -9,8 +9,6 @@
     <p><h1>🌱 Smart Crop Supply Management System<h6>Enterprise Application Development(EAD) Project<h6></h1><br></p>
     <p> </p>
 </header>
-
-
 <nav>
     <ul>
         <li><a href="#overview">Overview</a></li>
@@ -20,6 +18,7 @@
         <li><a href="#usage">Usage</a></li>
         <li><a href="#roles">User Roles</a></li>
         <li><a href="#future">Future Enhancements</a></li>
+        <li><a href="#default">Default Credentials</a></li>
     </ul>
 </nav>
 
@@ -81,6 +80,10 @@
             <td>Connectivity</td>
             <td>JDBC</td>
         </tr>
+        <tr>
+            <td>Reports</td>
+            <td>Jasper Reports</td>
+        </tr>
     </table>
 </section>
 <br>
@@ -92,6 +95,7 @@
         <li>Import the provided <code>database.sql</code> file.</li>
         <li>Configure database credentials in the DB connection file.</li>
         <li>Change my mysql port <code>Defualt</code> --> <code>3307</code>.</li>
+        <li>When Report Generating Exported file will on <code>C:/report/</code> Application will create <code>/report/</code> it self if not exist.</li>
     </ol>
 </section>
 <br>
@@ -140,7 +144,16 @@
         <li>Web-based version</li>
     </ul>
 </section>
-
+<br>
+<section id="default">
+    <h2>🗝️ Default Credentials</h2>
+    <ul>
+        <li>ADMIN --> <code>username : admin</code> <code>password : 1234</code>.</li>
+        <li>OFFICER --> <code>username : officer</code> <code>password : 1234</code>.</li>
+        <li>BUYER --> <code>username : buyer</code> <code>password : 1234</code>.</li>
+    </ul>
+</section>
+<br>
 </main>
 <br>
 <footer>
