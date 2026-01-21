@@ -136,7 +136,7 @@
             Project Default MySQL port is <code>3307</code>.
             <br>
             If had any issue , use this edition:-> 
-            <code><a href="https://github.com/nimna-01/SmartCropSupplyManagementSystem/releases/download/v1.0.1/SmartCrop-v1.0.1_JAR+DB.3306.zip">SmartCrop-v1.0.1_JAR+DB [3306]</a></code>
+            <code><a href="https://github.com/nimna-01/SmartCropSupplyManagementSystem/releases/download/v1.0.1/SmartCrop-v1.0.1.3306.jar">SmartCrop-v1.0.1_JAR+DB [3306]</a></code>
         </li>
         <li>
             Generated reports will be exported to:
