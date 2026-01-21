@@ -98,7 +98,7 @@
 <section id="usage">
     <h2>▶️ Usage</h2>
     <p><strong>Run using JAR file:</strong></p>
-    <code>java -jar SmartCrop-v1.0.0.jar</code>
+    <code>java -jar SmartCrop-v1.0.1.jar</code>
 
 <p><strong>OR</strong></p>
     <ul>
