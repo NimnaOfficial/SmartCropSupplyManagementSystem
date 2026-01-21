@@ -144,10 +144,8 @@
 
 <section id="usage">
     <h2>▶️ How to Run the Application</h2>
-
     <p><strong>Run using JAR file:</strong></p>
     <pre>java -jar SmartCrop-v1.0.1.jar</pre>
-
     <p><strong>OR run from IDE:</strong></p>
     <ul>
         <li>Open the project in IntelliJ IDEA / NetBeans / Eclipse</li>
