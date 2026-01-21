@@ -94,7 +94,7 @@
         <li>Install MySQL and create a database.</li>
         <li>Import the provided <code>database.sql</code> file.</li>
         <li>Configure database credentials in the DB connection file.</li>
-        <li>Change my mysql port <code>Defualt</code> --> <code>3307</code>.</li>
+        <li>Source code default mysql port <code>Defualt</code> --> <code>3307</code> change it or <code>SmartCrop-v1.0.1_JAR+DB [3306]</code> eddition.</li>
         <li>When Report Generating Exported file will on <code>C:/report/</code> Application will create <code>/report/</code> it self if not exist.</li>
     </ol>
 </section>
