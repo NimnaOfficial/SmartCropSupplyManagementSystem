@@ -18,7 +18,7 @@
         <li><a href="#usage">Usage</a></li>
         <li><a href="#roles">User Roles</a></li>
         <li><a href="#future">Future Enhancements</a></li>
-        <li><a href="#default">Future Enhancements</a></li>
+        <li><a href="#default">Default Credentials</a></li>
     </ul>
 </nav>
 
