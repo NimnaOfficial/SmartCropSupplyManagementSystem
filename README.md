@@ -130,7 +130,7 @@
         <li>Clone the GitHub repository to your local machine.</li>
         <li>Install MySQL Server and phpMyAdmin.</li>
         <li>Create a new database for the system.</li>
-        <li>Import the provided <code>DATABASE.ead_cw.sql</code> create database named <code>ead_cw</code> and import file.</li>
+        <li>Import the provided <code>SYSTEM_DATABASE.sql</code> create database named <code>ead_cw</code> and import file.</li>
         <li>Configure database credentials in the DB connection class.</li>
         <li>
             Project Default MySQL port is <code>3307</code>.
