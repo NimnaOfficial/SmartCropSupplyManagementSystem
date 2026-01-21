@@ -9,8 +9,6 @@
     <p><h1>🌱 Smart Crop Supply Management System<h6>Enterprise Application Development(EAD) Project<h6></h1><br></p>
     <p> </p>
 </header>
-
-
 <nav>
     <ul>
         <li><a href="#overview">Overview</a></li>
